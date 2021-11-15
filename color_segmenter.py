@@ -141,30 +141,30 @@ def main():
         maxs = np.array([ranges[image_channels[0]]['max'], ranges[image_channels[1]]['max'], ranges[image_channels[2]]['max']])     # Gets maximum RGB/HSV color values from dictionary.
         image_processed = cv2.inRange(image, mins, maxs)                                                                            # Process original image/video according to RGB/HSV color values range.
 
-        height, width, _ = image.shape                                                                                  # Get image dimensions.
-        mask = np.ndarray((height, width), dtype=np.uint8)
-        mask.fill(0)
-
-        # Contour detection and isolation of biggest contour + fill
-        if np.mean(image_processed) > 0:
-
-            contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-
-            sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
-
-            largest_item = sorted_contours[0]
-            cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))
-            #cv2.drawContours(mask, largest_item, -1, (255, 0, 0), -1)
-
-            #Centroid coordinates calculation + draw
-            M = cv2.moments(mask)
-            cX = int(M["m10"] / M["m00"])
-            cY = int(M["m01"] / M["m00"])
-            #cv2.circle(mask, (cX, cY), 5, (0, 0, 0), -1)
-            cv2.circle(image, (cX, cY), 5, (255, 0, 255), -1)
-
-        # cv2.imshow(window_name_video, image)  # Mostra a janela com o video
-        # cv2.imshow(window_name_mask, mask)
+        # height, width, _ = image.shape                                                                                  # Get image dimensions.
+        # mask = np.ndarray((height, width), dtype=np.uint8)
+        # mask.fill(0)
+        #
+        # # Contour detection and isolation of biggest contour + fill
+        # if np.mean(image_processed) > 0:
+        #
+        #     contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        #
+        #     sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
+        #
+        #     largest_item = sorted_contours[0]
+        #     cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))
+        #     #cv2.drawContours(mask, largest_item, -1, (255, 0, 0), -1)
+        #
+        #     #Centroid coordinates calculation + draw
+        #     M = cv2.moments(mask)
+        #     cX = int(M["m10"] / M["m00"])
+        #     cY = int(M["m01"] / M["m00"])
+        #     #cv2.circle(mask, (cX, cY), 5, (0, 0, 0), -1)
+        #     cv2.circle(image, (cX, cY), 5, (255, 0, 255), -1)
+        #
+        # # cv2.imshow(window_name_video, image)  # Mostra a janela com o video
+        # # cv2.imshow(window_name_mask, mask)
         cv2.imshow(window_name_segmentation, image_processed)                                                           # Display the processed image/video.
 
         # ------------------------------------------------------------
@@ -175,7 +175,7 @@ def main():
         if (key == ord('q')) or (key == ord('Q')) or (cv2.getWindowProperty(window_name_segmentation, 1) == -1):        # Check if user pressed the 'q' key or closed the window.
             print(Fore.YELLOW + Style.BRIGHT + 'Color segmentation Finished without store data in json file.' + Style.RESET_ALL)  # Program finished message.
             exit()                                                                                                      # Stops the program.
-        elif key == ord('w'):                                                                                           # Check if user pressed the 'w' key.
+        elif (key == ord('w')) or (key == ord('W')):                                                                                           # Check if user pressed the 'w' key.
             dict_result = {'limits': ranges}                                                                            # Creation of the dictionary.
 
             file_name = 'limits.json'                                                                                   # Creation of .json file.
