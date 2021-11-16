@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 import argparse
+import copy
+
 import cv2
 from colorama import Fore, Back, Style
 import numpy as np
@@ -14,6 +16,8 @@ def main():
     # ------------------------------------------------------------
     parser = argparse.ArgumentParser(description='Code for Thresholding Operations using inRange tutorial.')
     parser.add_argument('-j', '--json', help='Full path to json file.')
+
+
     args = vars(parser.parse_args())
 
     capture = cv2.VideoCapture(0)                                                                                       # Setup video capture for camera.
@@ -31,13 +35,15 @@ def main():
     pencil_dimension = 10                                                                                               # Set pencil default dimension.
 
     last_coordinates = ''                                                                                               # Initialization of an auxiliary variable.
-
+    all_coordinates = []
     # ------------------------------------------------------------
     # EXECUTION
     # ------------------------------------------------------------
+
     while True:
         _, image = capture.read()
         image=cv2.flip(image,1)                                                                                         # Get an image from the camera and store them at "image" variable.
+        image_raw=copy.copy(image)                                                                                      #Do a copy of image for show the original
         if image is None:                                                                                               # Check if there are no camera image.
             print(Fore.YELLOW + Style.BRIGHT + 'Video is over, terminating.' + Style.RESET_ALL)                         # Test finished message.
             break                                                                                                       # Break/Stops the loop.
@@ -47,7 +53,7 @@ def main():
         mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])           # Gets minimum RGB/HSV color values from data variable.
         maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])           # Gets maximum RGB/HSV color values from data variable.
 
-        image_processed = cv2.inRange(image, mins, maxs)                                                               # Process original image/video according to RGB/HSV color values range.
+        image_processed = cv2.inRange(image, mins, maxs)                                                                # Process original image/video according to RGB/HSV color values range.
 
         mask = np.ndarray((height, width), dtype=np.uint8)                                                              # Create a mask with the same size as image.
         mask.fill(0)                                                                                                    # Fill the mask with white.
@@ -66,9 +72,9 @@ def main():
 
             if last_coordinates == '':                                                                                      # Condition to execute the next command only once.
                 last_coordinates = (cX, cY)                                                                                 # Save first centroid coordinates at "last_coordinates" variable.
-            cv2.line(white_window, (last_coordinates[0], last_coordinates[1]), (cX, cY), pencil_color, pencil_dimension)    # Draw a line.
+            #cv2.line(white_window , (last_coordinates[0], last_coordinates[1]), (cX, cY), pencil_color, pencil_dimension)          # Draw a line.
             last_coordinates = (cX, cY)                                                                                     # Save last centroid coordinates.
-
+            all_coordinates.append(last_coordinates)                                                                                      #create a list with all points
         # ------------------------------------------------------------
         # TERMINATION
         # ------------------------------------------------------------
@@ -100,12 +106,21 @@ def main():
             current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
             month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
             current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
-            current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
+            current_time = datetime.datetime.now().strftime("%d_%all_coordinates:%M:%S_%Y")                                           # Get current day of month, time and year.
             date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
             cv2.imwrite('drawing_' + date_format + '.png', image)                                                       # Save image as png.
 
-        cv2.imshow(window_name_segmentation, image)                                                                     # Display the original image/video.
+
+        for i in range(2, len(all_coordinates)):
+            cv2.line(image,all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)                    #draw in image
+            cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)          #draw in white board
+
+        cv2.imshow('Original Video Image',image_raw)                                                                    #show original image
         cv2.imshow('white_window', white_window)                                                                        # Display the white window.
+        cv2.imshow(window_name_segmentation, image)                                                                     # Display the original image/video.
+
+
+        #cv2.imshow('white_window', white_window)
 
 
 if __name__ == '__main__':
