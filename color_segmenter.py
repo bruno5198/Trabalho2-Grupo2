@@ -91,7 +91,8 @@ def main():
         print(Fore.RED + Style.BRIGHT + 'error: Invalid input argument!' + Style.RESET_ALL)                             # Error message.
         exit()                                                                                                          # Stops the program.
 
-    capture = cv2.VideoCapture(args.get('camera_number'))                                                               # Setup video capture for camera.
+    capture = cv2.VideoCapture(args.get('camera_number'))
+
 
     testDevice(capture, args.get('camera_number'))                                                                      # Call 'testDevice' function to check if selected camera is available.
 

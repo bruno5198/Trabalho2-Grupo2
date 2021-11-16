@@ -36,7 +36,8 @@ def main():
     # EXECUTION
     # ------------------------------------------------------------
     while True:
-        _, image = capture.read()                                                                                       # Get an image from the camera and store them at "image" variable.
+        _, image = capture.read()
+        image=cv2.flip(image,1)                                                                                         # Get an image from the camera and store them at "image" variable.
         if image is None:                                                                                               # Check if there are no camera image.
             print(Fore.YELLOW + Style.BRIGHT + 'Video is over, terminating.' + Style.RESET_ALL)                         # Test finished message.
             break                                                                                                       # Break/Stops the loop.
@@ -46,7 +47,7 @@ def main():
         mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])           # Gets minimum RGB/HSV color values from data variable.
         maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])           # Gets maximum RGB/HSV color values from data variable.
 
-        image_processed = cv2.inRange(image, mins, maxs)                                                                # Process original image/video according to RGB/HSV color values range.
+        image_processed = cv2.inRange(image, mins, maxs)                                                               # Process original image/video according to RGB/HSV color values range.
 
         mask = np.ndarray((height, width), dtype=np.uint8)                                                              # Create a mask with the same size as image.
         mask.fill(0)                                                                                                    # Fill the mask with white.
