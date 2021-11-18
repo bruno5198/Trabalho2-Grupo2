@@ -115,7 +115,6 @@ def main():
             #white_window = np.full((height, width, 3), 255, dtype=np.uint8)                                             # Clear image.
             all_coordinates.clear()
             white_window.fill(255)
-
         elif (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
             current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
@@ -125,28 +124,81 @@ def main():
             date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
             cv2.imwrite('drawing_' + date_format + '.png', image)                                                       # Save image as png.
 
+        if (key == ord('o')) or (key == ord('O')):
+            print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
+            circleX = last_coordinates[0]
+            circleY = last_coordinates[1]
+            while True:
+                key1 = cv2.waitKey(10)
+                _, image = capture.read()
+                image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
+                image_raw = copy.copy(image)  # Do a copy of image for show the original
+                mask = np.ndarray((height, width), dtype=np.uint8)  # Create a mask with the same size as image.
+                mask.fill(0)
+                image_processed = cv2.inRange(image, mins,maxs)  # Process original image/video according to RGB/HSV color values range.
+                # Contour detection and isolation of biggest contour + fill
+                if np.mean(image_processed) > 0:
+                    contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)  # Get "image_processed" external contour.
+                    sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)  # Get contour area.
+                    largest_item = sorted_contours[0]  # Get largest item/contour.
+                    cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))  # Fill contour with white color.
+                    cv2.fillPoly(image_raw, pts=[largest_item], color=(0, 255, 0))
+                    cv2.polylines(image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
+                    M = cv2.moments(mask)  # Centroid coordinates calculation.
+                    cX1 = int(M["m10"] / M["m00"])  # Centroid coordinates calculation.
+                    cY1 = int(M["m01"] / M["m00"])  # Centroid coordinates calculation.
+                    cv2.circle(image_raw, (cX1, cY1), 2, (0, 0, 0), -1)
+                    if last_coordinates == '':  # Condition to execute the next command only once.
+                        last_coordinates = (cX1, cY1)  # Save first centroid coordinates at "last_coordinates" variable.
+                    last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
+                    r = int(math.sqrt((circleX - last_coordinates[0]) ** 2 + (circleY - last_coordinates[1]) ** 2))
+                    print(r)
+                    cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
+                    cv2.imshow('Original Video Image', image_raw)  # show original image
+                    cv2.imshow('white_window', white_window)  # Display the white window.
+                    cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
+                if (key1 == ord('p')):
+                    break
+
+
+
+        if (key == ord('s')) or (key == ord('S')):
+            print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
+            circleX = last_coordinates[0]
+            circleY = last_coordinates[1]
+            while True:
+                key1 = cv2.waitKey(10)
+                _, image = capture.read()
+                image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
+                image_raw = copy.copy(image)  # Do a copy of image for show the original
+                mask = np.ndarray((height, width), dtype=np.uint8)  # Create a mask with the same size as image.
+                mask.fill(0)
+                image_processed = cv2.inRange(image, mins,maxs)  # Process original image/video according to RGB/HSV color values range.
+                # Contour detection and isolation of biggest contour + fill
+                if np.mean(image_processed) > 0:
+                    contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)  # Get "image_processed" external contour.
+                    sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)  # Get contour area.
+                    largest_item = sorted_contours[0]  # Get largest item/contour.
+                    cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))  # Fill contour with white color.
+                    cv2.fillPoly(image_raw, pts=[largest_item], color=(0, 255, 0))
+                    cv2.polylines(image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
+                    M = cv2.moments(mask)  # Centroid coordinates calculation.
+                    cX1 = int(M["m10"] / M["m00"])  # Centroid coordinates calculation.
+                    cY1 = int(M["m01"] / M["m00"])  # Centroid coordinates calculation.
+                    cv2.circle(image_raw, (cX1, cY1), 2, (0, 0, 0), -1)
+                    if last_coordinates == '':  # Condition to execute the next command only once.
+                        last_coordinates = (cX1, cY1)  # Save first centroid coordinates at "last_coordinates" variable.
+                    last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
+                    cv2.rectangle(white_window,(circleX,circleY), (cX1,cY1),pencil_color,-1)
+                    cv2.imshow('Original Video Image', image_raw)  # show original image
+                    cv2.imshow('white_window', white_window)  # Display the white window.
+                    cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
+                if (key1 == ord('p')):
+                    break
+
         for i in range(2, len(all_coordinates)):
             cv2.line(image,all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)                    #draw in image
             cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)          #draw in white board
-
-        #if (key == ord('o')) or (key == ord('O')):
-         #   print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
-          #  circleX = last_coordinates[0]
-           # circleY = last_coordinates[1]
-
-            #r = int(math.sqrt((circleX - all_coordinates[i][0]) ** 2 + (circleY - all_coordinates[i][1]) ** 2))
-            #cv2.circle(white_window, (circleX, circleY), r, (0, 0, 255), 0)
-            #print("CIrcleX: " + str(circleX))
-            #print("CircleY: " + str(circleY))
-            #print("Radius: " + str(r))
-
-
-
-
-
-
-
-
 
 
 
