@@ -153,11 +153,13 @@ def main():
                     last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
                     r = int(math.sqrt((circleX - last_coordinates[0]) ** 2 + (circleY - last_coordinates[1]) ** 2))
                     print(r)
-                    cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
+                    #cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
+                    cv2.circle(image, (circleX, circleY), r, pencil_color, -1)
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
                 if (key1 == ord('p')):
+                    cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
                     break
 
 
@@ -189,11 +191,13 @@ def main():
                     if last_coordinates == '':  # Condition to execute the next command only once.
                         last_coordinates = (cX1, cY1)  # Save first centroid coordinates at "last_coordinates" variable.
                     last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
-                    cv2.rectangle(white_window,(circleX,circleY), (cX1,cY1),pencil_color,-1)
+                    #cv2.rectangle(white_window,(circleX,circleY), (cX1,cY1),pencil_color,-1)
+                    cv2.rectangle(image, (circleX, circleY), (cX1, cY1), pencil_color, -1)
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
                 if (key1 == ord('p')):
+                    cv2.rectangle(white_window, (circleX, circleY), (cX1, cY1), pencil_color, -1)
                     break
 
         for i in range(2, len(all_coordinates)):
