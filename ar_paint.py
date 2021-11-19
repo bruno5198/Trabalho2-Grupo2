@@ -17,7 +17,7 @@ def main():
     # ------------------------------------------------------------
     parser = argparse.ArgumentParser(description='Code for Thresholding Operations using inRange tutorial.')
     parser.add_argument('-j', '--json', help='Full path to json file.')
-
+    parser.add_argument('-usp', '--use_shake_protection', help='It doesnt draw when you dont want to.')                 # Modo de user shake protection
 
     args = vars(parser.parse_args())
 
@@ -26,7 +26,6 @@ def main():
     window_name_segmentation = 'Segmentation'                                                                           # Set window name.
 
     cv2.namedWindow(window_name_segmentation, cv2.WINDOW_AUTOSIZE)                                                      # Window Setup.
-
     width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))                                                                  # Get image dimensions (width).
     height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))                                                                # Get image dimensions (height).
 
@@ -52,8 +51,13 @@ def main():
 
         data = json.load(open(args.get('json')))                                                                        # Get .json file data and store them at 'data' variable.
 
-        mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])           # Gets minimum RGB/HSV color values from data variable.
-        maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])           # Gets maximum RGB/HSV color values from data variable.
+        if not args.get('RGB_segmentation'):
+            mins = np.array([data['limits']['H']['min'], data['limits']['S']['min'], data['limits']['V']['min']])           # Gets minimum RGB/HSV color values from data variable.
+            maxs = np.array([data['limits']['H']['max'], data['limits']['S']['max'], data['limits']['V']['max']])
+
+        else:
+            mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])           # Gets minimum RGB/HSV color values from data variable.
+            maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])
 
         image_processed = cv2.inRange(image, mins, maxs)                                                                # Process original image/video according to RGB/HSV color values range.
 
