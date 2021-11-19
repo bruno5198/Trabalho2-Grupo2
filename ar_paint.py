@@ -106,7 +106,7 @@ def main():
             current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
             month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
             current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
-            current_time = datetime.datetime.now().strftime("%d_%all_coordinates:%M:%S_%Y")                                           # Get current day of month, time and year.
+            current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
             date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
             cv2.imwrite('drawing_' + date_format + '.png', image)                                                       # Save image as png.
 
