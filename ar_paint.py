@@ -615,11 +615,11 @@ def main():
                 if str(w[0]) > str(1.5) and str(w[1]) > str(1.5):
                     pass
                 else:
-                    cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)           # Draw in image
+                    cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)           # Draw in image.
                     cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)
             else:
-                cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)               # Draw in image
-                cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)      # Draw in white board
+                cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)               # Draw in image.
+                cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)      # Draw in white board.
 
 
 
