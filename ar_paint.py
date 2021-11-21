@@ -402,14 +402,14 @@ def main():
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
-                if (key1 == ord('p')):
+                if (key1 == ord('o')) or (key1 == ord('O')):
                     cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
                     break
 
 
 
         if (key == ord('s')) or (key == ord('S')):
-            print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
+            print(Fore.YELLOW + Style.BRIGHT + 'Drawing rectangle.' + Style.RESET_ALL)
             circleX = last_coordinates[0]
             circleY = last_coordinates[1]
             while True:
@@ -440,10 +440,49 @@ def main():
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
-                if (key1 == ord('p')):
+                if (key1 == ord('s') or (key1 == ord('S'))):
                     cv2.rectangle(white_window, (circleX, circleY), (cX1, cY1), pencil_color, -1)
                     break
 
+        ######################################################################
+        if (key == ord('p')) or (key == ord('P')):
+            print(Fore.YELLOW + Style.BRIGHT + 'Drawing Poliygon.' + Style.RESET_ALL)
+            circleX = last_coordinates[0]
+            circleY = last_coordinates[1]
+            points = []
+            while True:
+                key1 = cv2.waitKey(10)
+                _, image = capture.read()
+                image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
+                image_raw = copy.copy(image)  # Do a copy of image for show the original
+                mask = np.ndarray((height, width), dtype=np.uint8)  # Create a mask with the same size as image.
+                mask.fill(0)
+                image_processed = cv2.inRange(image, mins,maxs)  # Process original image/video according to RGB/HSV color values range.
+                # Contour detection and isolation of biggest contour + fill
+                if np.mean(image_processed) > 0:
+                    contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)  # Get "image_processed" external contour.
+                    sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)  # Get contour area.
+                    largest_item = sorted_contours[0]  # Get largest item/contour.
+                    cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))  # Fill contour with white color.
+                    cv2.fillPoly(image_raw, pts=[largest_item], color=(0, 255, 0))
+                    cv2.polylines(image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
+                    M = cv2.moments(mask)  # Centroid coordinates calculation.
+                    cX1 = int(M["m10"] / M["m00"])  # Centroid coordinates calculation.
+                    cY1 = int(M["m01"] / M["m00"])  # Centroid coordinates calculation.
+                    cv2.circle(image_raw, (cX1, cY1), 2, (0, 0, 0), -1)
+                    if last_coordinates == '':  # Condition to execute the next command only once.
+                        last_coordinates = (cX1, cY1)  # Save first centroid coordinates at "last_coordinates" variable.
+                    last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
+                    if (key1 == ord('p')) or (key == ord('P')):
+                        points.append((cX1,cY1))
+                        print(Fore.YELLOW + Style.BRIGHT + 'Added point do Polygon.' + Style.RESET_ALL)
+                    cv2.imshow('Original Video Image', image_raw)  # show original image
+                    cv2.imshow('white_window', white_window)  # Display the white window.
+                    cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
+                if (key1 == ord('x') or (key1 == ord('X'))):
+                    cv2.fillPoly(white_window,np.array([points]),pencil_color,lineType=cv2.LINE_AA)
+                    break
+        ################################################################################
         for i in range(2, len(all_coordinates)):
             if args.get('use_shake_protection'):
                 x = np.array(all_coordinates[i])
