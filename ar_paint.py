@@ -503,8 +503,6 @@ def main():
         cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
         cv2.imshow('white_window', white_window)                                                                        # Display the white window.
         cv2.imshow(window_name_segmentation, image)                                                                     # Display the original image/video.
-
-
         #cv2.imshow('white_window', white_window)
 
 
