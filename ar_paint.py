@@ -254,7 +254,7 @@ def main():
     parser.add_argument('-af4', '--advancedFunctionality4', help='Run Advanced Functionality 4 and 5.', action='store_true', default=False)
     parser.add_argument('-if', '--imageFile', help='Full path to image file.', default='./pinguim2.png')                # Used just for advanced functionality 4.
     parser.add_argument('-pt', '--pencilThickness', help='Set pencil thickness.', type=int, default=10)                 # Used just for advanced functionality 4.
-    parser.add_argument('-usp', '--use_shake_protection', help='It doesnt draw when you dont want to.')                 # Modo de user shake protection
+    parser.add_argument('-usp', '--use_shake_protection',action='store_true', help='It doesnt draw when you dont want to.',default= False)                # Modo de user shake protection
 
     args = vars(parser.parse_args())
 
@@ -445,8 +445,19 @@ def main():
                     break
 
         for i in range(2, len(all_coordinates)):
-            cv2.line(image,all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)                    #draw in image
-            cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)          #draw in white board
+            if args.get('use_shake_protection'):
+                x = np.array(all_coordinates[i])
+                z = np.array(all_coordinates[i-1])
+                w = abs(x - z)
+
+                if str(w[0]) > str(20) or str(w[1]) > str(20):
+                    pass
+                else:
+                    cv2.line(image,all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)                    #draw in image
+                    cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)
+            else:
+                cv2.line(image,all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)                    #draw in image
+                cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)          #draw in white board
 
 
 
