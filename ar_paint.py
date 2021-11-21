@@ -504,6 +504,7 @@ def main():
         cv2.imshow('white_window', white_window)                                                                        # Display the white window.
         cv2.imshow(window_name_segmentation, image)                                                                     # Display the original image/video.
         #cv2.imshow('white_window', white_window)
+        #
 
 
 if __name__ == '__main__':
