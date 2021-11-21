@@ -489,7 +489,7 @@ def main():
                 z = np.array(all_coordinates[i-1])
                 w = abs(x - z)
 
-                if str(w[0]) > str(20) or str(w[1]) > str(20):
+                if str(w[0]) > str(1.5) and str(w[1]) > str(1.5):
                     pass
                 else:
                     cv2.line(image,all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)                    #draw in image
