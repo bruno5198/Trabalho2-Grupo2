@@ -568,7 +568,7 @@ def main():
 
         ######################################################################
         if (key == ord('p')) or (key == ord('P')):
-            print(Fore.YELLOW + Style.BRIGHT + 'Drawing Poliygon.' + Style.RESET_ALL)
+            print(Fore.YELLOW + Style.BRIGHT + 'Drawing Polygon.' + Style.RESET_ALL)
             circleX = last_coordinates[0]
             circleY = last_coordinates[1]
             points = []
@@ -598,9 +598,16 @@ def main():
                     if (key1 == ord('p')) or (key == ord('P')):
                         points.append((cX1,cY1))
                         print(Fore.YELLOW + Style.BRIGHT + 'Added point do Polygon.' + Style.RESET_ALL)
+
+
+                    if (len(points) > 0):
+                        for i in range(1, len(points)):
+                            cv2.line(image, points[i], points[i - 1], pencil_color, 1)
+                            cv2.line(white_window, points[i], points[i - 1], pencil_color, 1)
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
+
                 if (key1 == ord('x') or (key1 == ord('X'))):
                     cv2.fillPoly(white_window,np.array([points]),pencil_color,lineType=cv2.LINE_AA)
                     break
