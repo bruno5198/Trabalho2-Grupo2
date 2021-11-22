@@ -448,8 +448,10 @@ def main():
             cv2.polylines(image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
 
             cX, cY = moments_calc(mask)                                                                                 # Call moments_calc() function to get centroid.
-            cv2.circle(image_raw, (cX, cY), 2, (0, 0, 0), -1)
-
+            cv2.line(image_raw, (cX ,cY), (cX + 4, cY), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
+            cv2.line(image_raw, (cX, cY), (cX - 4, cY), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
+            cv2.line(image_raw, (cX, cY), (cX, cY - 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
+            cv2.line(image_raw, (cX, cY), (cX, cY + 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
             last_coordinates = (cX, cY)                                                                                 # Save last centroid coordinates.
             all_coordinates.append(last_coordinates)                                                                    # create a list with all points.
 
@@ -493,13 +495,12 @@ def main():
             current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
             date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
             cv2.imwrite('drawing_' + date_format + '.png', image)                                                       # Save image as png.
-
-        if (key == ord('o')) or (key == ord('O')):
+        elif (key == ord('o')) or (key == ord('O')):                                                                    # Check if user pressed the 'o' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
-            circleX = last_coordinates[0]
-            circleY = last_coordinates[1]
+            circleX = last_coordinates[0]                                                                               # Saves centroid x position
+            circleY = last_coordinates[1]                                                                               # Saves centroid y position
             while True:
-                key1 = cv2.waitKey(10)
+                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
                 _, image = capture.read()
                 image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
                 image_raw = copy.copy(image)  # Do a copy of image for show the original
@@ -519,25 +520,21 @@ def main():
                     if last_coordinates == '':  # Condition to execute the next command only once.
                         last_coordinates = (cX1, cY1)  # Save first centroid coordinates at "last_coordinates" variable.
                     last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
-                    r = int(math.sqrt((circleX - last_coordinates[0]) ** 2 + (circleY - last_coordinates[1]) ** 2))
-                    print(r)
+                    r = int(math.sqrt((circleX - last_coordinates[0]) ** 2 + (circleY - last_coordinates[1]) ** 2))     # Calculates the distance between the initial centroid position and the current centroid position
                     #cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
-                    cv2.circle(image, (circleX, circleY), r, pencil_color, -1)
+                    cv2.circle(image, (circleX, circleY), r, pencil_color, -1)                                          # Draws circle with variable radius on camera
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
                 if (key1 == ord('o')) or (key1 == ord('O')):
-                    cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
+                    cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)                                   # Draws the circle with the chosen size
                     break
-
-
-
-        if (key == ord('s')) or (key == ord('S')):
+        elif (key == ord('s')) or (key == ord('S')):                                                                    # Check if user pressed the 's' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing rectangle.' + Style.RESET_ALL)
             circleX = last_coordinates[0]
             circleY = last_coordinates[1]
             while True:
-                key1 = cv2.waitKey(10)
+                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
                 _, image = capture.read()
                 image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
                 image_raw = copy.copy(image)  # Do a copy of image for show the original
@@ -558,22 +555,20 @@ def main():
                         last_coordinates = (cX1, cY1)  # Save first centroid coordinates at "last_coordinates" variable.
                     last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
                     #cv2.rectangle(white_window,(circleX,circleY), (cX1,cY1),pencil_color,-1)
-                    cv2.rectangle(image, (circleX, circleY), (cX1, cY1), pencil_color, -1)
+                    cv2.rectangle(image, (circleX, circleY), (cX1, cY1), pencil_color, -1)                              # Draws rectangle with variable size on camera
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
                 if (key1 == ord('s') or (key1 == ord('S'))):
-                    cv2.rectangle(white_window, (circleX, circleY), (cX1, cY1), pencil_color, -1)
+                    cv2.rectangle(white_window, (circleX, circleY), (cX1, cY1), pencil_color, -1)                       # Draws the square with the chosen size
                     break
-
-        ######################################################################
-        if (key == ord('p')) or (key == ord('P')):
+        elif (key == ord('p')) or (key == ord('P')):                                                                    # Check if user pressed the 'p' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing Polygon.' + Style.RESET_ALL)
             circleX = last_coordinates[0]
             circleY = last_coordinates[1]
             points = []
             while True:
-                key1 = cv2.waitKey(10)
+                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
                 _, image = capture.read()
                 image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
                 image_raw = copy.copy(image)  # Do a copy of image for show the original
@@ -596,22 +591,19 @@ def main():
                         last_coordinates = (cX1, cY1)  # Save first centroid coordinates at "last_coordinates" variable.
                     last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
                     if (key1 == ord('p')) or (key == ord('P')):
-                        points.append((cX1,cY1))
+                        points.append((cX1,cY1))                                                                        # Saves a new point to the polygon with the current centroid position
                         print(Fore.YELLOW + Style.BRIGHT + 'Added point do Polygon.' + Style.RESET_ALL)
-
-
                     if (len(points) > 0):
                         for i in range(1, len(points)):
-                            cv2.line(image, points[i], points[i - 1], pencil_color, 1)
-                            cv2.line(white_window, points[i], points[i - 1], pencil_color, 1)
+                            cv2.line(image, points[i], points[i - 1], pencil_color, 1)                                  # Draws line between the current saved point and the last point on camera
+                            cv2.line(white_window, points[i], points[i - 1], pencil_color, 1)                           # Draws line between the current saved point and the last point on whiteboard
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
 
                 if (key1 == ord('x') or (key1 == ord('X'))):
-                    cv2.fillPoly(white_window,np.array([points]),pencil_color,lineType=cv2.LINE_AA)
+                    cv2.fillPoly(white_window,np.array([points]),pencil_color,lineType=cv2.LINE_AA)                     # Draws the polygon with all the points and fill
                     break
-        ################################################################################
 
         for i in range(2, len(all_coordinates)):
             if args.get('use_shake_protection'):
@@ -633,7 +625,7 @@ def main():
         cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
         cv2.imshow('white_window', white_window)                                                                        # Display the white window.
         cv2.imshow(window_name_segmentation, image)                                                                     # Display the original image/video.
-        #cv2.imshow('white_window', white_window)
+
 
 
 if __name__ == '__main__':
