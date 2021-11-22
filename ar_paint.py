@@ -428,10 +428,12 @@ def main():
         if list(data['limits'].keys())[0] == 'H':                                                                       # Checks if color segmenter it was defined based in HSV.
             mins = np.array([data['limits']['H']['min'], data['limits']['S']['min'], data['limits']['V']['min']])       # Gets minimum HSV color values from data variable.
             maxs = np.array([data['limits']['H']['max'], data['limits']['S']['max'], data['limits']['V']['max']])       # Gets maximum HSV color values from data variable.
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         elif list(data['limits'].keys())[0] == 'B':                                                                     # Checks if color segmenter it was defined based in RGB.
             mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])       # Gets minimum RGB color values from data variable.
             maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])       # Gets maximum RGB color values from data variable.
+
 
         image_processed = cv2.inRange(image, mins, maxs)                                                                # Process original image/video according to RGB/HSV color values range.
 
@@ -622,9 +624,11 @@ def main():
 
 
 
+
+        cv2.imshow(window_name_segmentation, image)
         cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
         cv2.imshow('white_window', white_window)                                                                        # Display the white window.
-        cv2.imshow(window_name_segmentation, image)                                                                     # Display the original image/video.
+                                                                           # Display the original image/video.
 
 
 
