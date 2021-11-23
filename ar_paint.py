@@ -462,7 +462,7 @@ def main():
             cv2.line(image_raw, (cX, cY), (cX - 4, cY), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
             cv2.line(image_raw, (cX, cY), (cX, cY - 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
             cv2.line(image_raw, (cX, cY), (cX, cY + 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
-            last_coordinates = ( (cX, cY), pencil_color)                                                                                 # Save last centroid coordinates.
+            last_coordinates = ( (cX, cY), pencil_color,pencil_dimension)                                                                                 # Save last centroid coordinates.
             all_coordinates.append(last_coordinates)                                                                    # create a list with all points.
 
         # ------------------------------------------------------------
@@ -624,11 +624,11 @@ def main():
                 if str(w[0]) > str(1.5) and str(w[1]) > str(1.5):
                     pass
                 else:
-                    cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0],all_coordinates[i][1],pencil_dimension)           # Draw in image.
-                    cv2.line(white_window, all_coordinates[i][0], all_coordinates[i - 1][0], all_coordinates[i][1],pencil_dimension)
+                    cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0],all_coordinates[i][1],all_coordinates[i][2])           # Draw in image.
+                    cv2.line(white_window, all_coordinates[i][0], all_coordinates[i - 1][0], all_coordinates[i][1],all_coordinates[i][2])
             else:
-                cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], pencil_dimension)               # Draw in image.
-                cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], pencil_dimension)      # Draw in white board.
+                cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])               # Draw in image.
+                cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])      # Draw in white board.
 
 
 
