@@ -397,14 +397,15 @@ def main():
         exit()                                                                                                          # Stops the program.
 
     capture = cv2.VideoCapture(0)                                                                                       # Setup video capture for camera.
+    #capture = cv2.resize(capture, (int(1920/4), int(1080/4) ) )
 
     window_name_segmentation = 'Segmentation'                                                                           # Set window name.
 
     cv2.namedWindow(window_name_segmentation, cv2.WINDOW_AUTOSIZE)                                                      # Window Setup.
-    width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))                                                                  # Get image dimensions (width).
-    height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))                                                                # Get image dimensions (height).
+    width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH)/2)                                                                  # Get image dimensions (width).
+    height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT)/2)                                                                # Get image dimensions (height).
 
-    white_window = np.full((height, width, 3), 255, dtype=np.uint8)                                                     # Create a white image with the same size as the original image/video.
+    white_window = np.full( (height, width, 3), 255, dtype=np.uint8)                                                     # Create a white image with the same size as the original image/video.
 
     pencil_color = (0, 0, 0)                                                                                            # Set pencil default color.
     pencil_dimension = 10                                                                                               # Set pencil default dimension.
@@ -418,7 +419,14 @@ def main():
     while True:
         _, image = capture.read()
         image = cv2.flip(image, 1)                                                                                      # Get an image from the camera and store them at "image" variable.
+        image = cv2.resize(image, (
+        int(capture.get(cv2.CAP_PROP_FRAME_WIDTH) / 2), int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT) / 2)),
+                               interpolation=cv2.INTER_AREA)
+
         image_raw = copy.copy(image)                                                                                    # Do a copy of image for show the original
+
+
+
         if image is None:                                                                                               # Check if there are no camera image.
             print(Fore.YELLOW + Style.BRIGHT + 'Video is over, terminating.' + Style.RESET_ALL)                         # Test finished message.
             break                                                                                                       # Break/Stops the loop.
@@ -454,7 +462,7 @@ def main():
             cv2.line(image_raw, (cX, cY), (cX - 4, cY), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
             cv2.line(image_raw, (cX, cY), (cX, cY - 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
             cv2.line(image_raw, (cX, cY), (cX, cY + 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
-            last_coordinates = (cX, cY)                                                                                 # Save last centroid coordinates.
+            last_coordinates = ( (cX, cY), pencil_color)                                                                                 # Save last centroid coordinates.
             all_coordinates.append(last_coordinates)                                                                    # create a list with all points.
 
         # ------------------------------------------------------------
@@ -468,23 +476,23 @@ def main():
         elif (key == ord('r')) or (key == ord('Q')):                                                                    # Check if user pressed the 'r' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Red.' + Style.RESET_ALL)                         # Pencil color changed message.
             pencil_color = (0, 0, 255)                                                                                  # Change pencil color to red.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('g')) or (key == ord('G')):                                                                    # Check if user pressed the 'g' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Green.' + Style.RESET_ALL)                       # Pencil color changed message.
             pencil_color = (0, 255, 0)                                                                                  # Change pencil color to green.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('b')) or (key == ord('B')):                                                                    # Check if user pressed the 'b' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Blue.' + Style.RESET_ALL)                        # Pencil color changed message.
             pencil_color = (255, 0, 0)                                                                                  # Change pencil color to blue.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif key == ord('+'):                                                                                           # Check if user pressed the '+' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil size change (bigger).' + Style.RESET_ALL)                        # Pencil size changed message.
             pencil_dimension = pencil_dimension + 1                                                                     # Increase pencil dimension.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('-')) and (pencil_dimension >= 1):                                                             # Check if user pressed the '-' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil size change (smaller).' + Style.RESET_ALL)                       # Pencil size changed message.
             pencil_dimension = pencil_dimension - 1                                                                     # Decrease pencil dimension.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('c')) or (key == ord('C')):                                                                    # Check if user pressed the 'c' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Image cleared.' + Style.RESET_ALL)                                      # Image cleared message.
             all_coordinates.clear()
@@ -609,25 +617,37 @@ def main():
 
         for i in range(2, len(all_coordinates)):
             if args.get('use_shake_protection'):
-                x = np.array(all_coordinates[i])
-                z = np.array(all_coordinates[i-1])
+                x = np.array(all_coordinates[i][0])
+                z = np.array(all_coordinates[i-1][0])
                 w = abs(x - z)
 
                 if str(w[0]) > str(1.5) and str(w[1]) > str(1.5):
                     pass
                 else:
-                    cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)           # Draw in image.
-                    cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)
+                    cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0],all_coordinates[i][1],pencil_dimension)           # Draw in image.
+                    cv2.line(white_window, all_coordinates[i][0], all_coordinates[i - 1][0], all_coordinates[i][1],pencil_dimension)
             else:
-                cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)               # Draw in image.
-                cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)      # Draw in white board.
+                cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], pencil_dimension)               # Draw in image.
+                cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], pencil_dimension)      # Draw in white board.
 
 
 
+        # convert to 3 channels, it was b/w
+        image_processed = cv2.cvtColor(image_processed, cv2.COLOR_GRAY2BGR)
 
-        cv2.imshow(window_name_segmentation, image)
-        cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
-        cv2.imshow('white_window', white_window)                                                                        # Display the white window.
+        frame_h1 = cv2.hconcat([image,image_raw])
+        frame_h2 = cv2.hconcat([white_window, image_processed])
+
+        #print(f"{image_processed.shape} {image.shape} {white_window.shape} {image_raw.shape}")
+
+        finalframe=cv2.vconcat([frame_h1,frame_h2])
+
+
+        cv2.imshow('FinalFrame', finalframe)
+        #cv2.imshow(window_name_segmentation, image)
+        #cv2.imshow("s", image_processed)
+        #cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
+        #cv2.imshow('white_window', white_window)                                                                        # Display the white window.
                                                                            # Display the original image/video.
 
 
