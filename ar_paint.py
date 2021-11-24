@@ -463,7 +463,7 @@ def main():
             cv2.line(image_raw, (cX, cY), (cX - 4, cY), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
             cv2.line(image_raw, (cX, cY), (cX, cY - 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
             cv2.line(image_raw, (cX, cY), (cX, cY + 4), (0, 0, 0), 2)                                                   #Draw part of the cross on the centroid
-            last_coordinates = (cX, cY)                                                                                 # Save last centroid coordinates.
+            last_coordinates = ( (cX, cY), pencil_color,pencil_dimension)                                                                                 # Save last centroid coordinates.
             all_coordinates.append(last_coordinates)                                                                    # create a list with all points.
 
         # ------------------------------------------------------------
@@ -477,25 +477,25 @@ def main():
         elif (key == ord('r')) or (key == ord('Q')):                                                                    # Check if user pressed the 'r' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Red.' + Style.RESET_ALL)                         # Pencil color changed message.
             pencil_color = (0, 0, 255)                                                                                  # Change pencil color to red.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('g')) or (key == ord('G')):                                                                    # Check if user pressed the 'g' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Green.' + Style.RESET_ALL)                       # Pencil color changed message.
             pencil_color = (0, 255, 0)                                                                                  # Change pencil color to green.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('b')) or (key == ord('B')):                                                                    # Check if user pressed the 'b' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Blue.' + Style.RESET_ALL)                        # Pencil color changed message.
             pencil_color = (255, 0, 0)                                                                                  # Change pencil color to blue.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif key == ord('+'):                                                                                           # Check if user pressed the '+' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil size: ' + str(pencil_dimension) + ' (bigger).'  + Style.RESET_ALL)                        # Pencil size changed message.
             pencil_dimension = pencil_dimension + 1                                                                     # Increase pencil dimension.
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('-')):                                                                                         # Check if user pressed the '-' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil size: ' + str(pencil_dimension) + ' (smaller).' + Style.RESET_ALL)                       # Pencil size changed message.
             pencil_dimension = pencil_dimension - 1                                                                     # Decrease pencil dimension.
             if (pencil_dimension <=1):
                 pencil_dimension = 1
-            all_coordinates.clear()
+            #all_coordinates.clear()
         elif (key == ord('c')) or (key == ord('C')):                                                                    # Check if user pressed the 'c' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Image cleared.' + Style.RESET_ALL)                                      # Image cleared message.
             all_coordinates.clear()
@@ -627,18 +627,18 @@ def main():
 
         for i in range(2, len(all_coordinates)):
             if args.get('use_shake_protection'):
-                x = np.array(all_coordinates[i])
-                z = np.array(all_coordinates[i-1])
+                x = np.array(all_coordinates[i][0])
+                z = np.array(all_coordinates[i-1][0])
                 w = abs(x - z)
 
                 if str(w[0]) > str(1.5) and str(w[1]) > str(1.5):
                     pass
                 else:
-                    cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)           # Draw in image.
-                    cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)
+                    cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])           # Draw in image.
+                    cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])
             else:
-                cv2.line(image, all_coordinates[i], all_coordinates[i-1], pencil_color, pencil_dimension)               # Draw in image.
-                cv2.line(white_window, all_coordinates[i], all_coordinates[i - 1], pencil_color, pencil_dimension)      # Draw in white board.
+                cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])               # Draw in image.
+                cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])      # Draw in white board.
 
 
 
