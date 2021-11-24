@@ -134,7 +134,7 @@ def main():
             print(Fore.YELLOW + Style.BRIGHT + 'Color segmentation Finished without store data in json file.' + Style.RESET_ALL)  # Program finished message.
             exit()                                                                                                      # Stops the program.
         elif (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
-
+            print(Fore.YELLOW + Style.BRIGHT + 'RGB parameters successfully saved!' + Style.RESET_ALL)
             ranges = {'B': {'max': B_max, 'min': B_min},                                                                # Dictionary to store minimum and maximum RGB/HSV color values (Blue/Hue).
                       'G': {'max': G_max, 'min': G_min},                                                                # Dictionary to store minimum and maximum RGB/HSV color values (Green/Saturation).
                       'R': {'max': R_max, 'min': R_min}}                                                                # Dictionary to store minimum and maximum RGB/HSV color values (Red/Value).
@@ -145,7 +145,8 @@ def main():
             print('\n============================= Results =============================\n')                            # Results message.
             json.dump(dict_result, open(file_name, 'w'))                                                                # Save results at .json file.
             pp = pprint.PrettyPrinter(indent=1)                                                                         # Set the dictionary initial indentation.
-            pp.pprint(dict_result)                                                                                      # Print the entire dictionary.
+            pp.pprint(dict_result)
+            print(Fore.YELLOW + Style.BRIGHT + 'Color Segmenter Finished.' + Style.RESET_ALL)# Print the entire dictionary.
             break                                                                                                       # Break/Stops the loop.
 
 
