@@ -515,11 +515,11 @@ def main():
             current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
             current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
             date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
-            cv2.imwrite('drawing_' + date_format + '.png', image)                                                       # Save image as png.
+            cv2.imwrite('drawing_' + date_format + '.png', white_window)                                                # Save image as png.
         elif (key == ord('o')) or (key == ord('O')):                                                                    # Check if user pressed the 'o' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
-            circleX = cX                                                                              # Saves centroid x position
-            circleY = cY                                                                             # Saves centroid y position
+            circleX = cX                                                                                                # Saves centroid x position
+            circleY = cY                                                                                                # Saves centroid y position
             while True:
                 key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
                 _, image = capture.read()
