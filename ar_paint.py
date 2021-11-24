@@ -412,6 +412,8 @@ def main():
     last_coordinates = ''                                                                                               # Initialization of an auxiliary variable.
     all_coordinates = []
     polys = [] # save all polygons and colors, structure -> (np.array(polygon), color)
+    circles = [] #save all circles and colors, struct -> ( (circleX, circleY), r, pencil_color )
+    rectangles = [] # save all rectangles and colors, struct -> ( (x1, y1), (x2, y2), pencil_color )
     data = json.load(open(args.get('json')))
 
     if (data['limits']['B']['min'] > data['limits']['G']['min']) and (data['limits']['B']['min'] > data['limits']['R']['min']):
@@ -503,6 +505,8 @@ def main():
             print(Fore.YELLOW + Style.BRIGHT + 'Image cleared.' + Style.RESET_ALL)                                      # Image cleared message.
             all_coordinates.clear()
             polys.clear()
+            circles.clear()
+            rectangles.clear()
             white_window.fill(255)
         elif (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
@@ -547,7 +551,9 @@ def main():
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
 
                 if (key1 == ord('o')) or (key1 == ord('O')):
-                    cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)                                   # Draws the circle with the chosen size
+                    #cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)                                   # Draws the circle with the chosen size
+                    circles.append( ((circleX, circleY), r, pencil_color )) #save circles for future drawing
+
                     break
         elif (key == ord('s')) or (key == ord('S')):                                                                    # Check if user pressed the 's' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing rectangle.' + Style.RESET_ALL)
@@ -581,7 +587,9 @@ def main():
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
                 if (key1 == ord('s') or (key1 == ord('S'))):
-                    cv2.rectangle(white_window, (circleX, circleY), (cX1, cY1), pencil_color, -1)                       # Draws the square with the chosen size
+                    #cv2.rectangle(white_window, (circleX, circleY), (cX1, cY1), pencil_color, -1)                       # Draws the square with the chosen size
+                    rectangles.append( ( (circleX, circleY), (cX1, cY1), pencil_color ) )
+
                     break
         elif (key == ord('p')) or (key == ord('P')):                                                                    # Check if user pressed the 'p' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing Polygon.' + Style.RESET_ALL)
@@ -656,6 +664,22 @@ def main():
         for p in polys:
             cv2.fillPoly(image, p[0], p[1], lineType=cv2.LINE_AA)
             cv2.fillPoly(white_window, p[0], p[1], lineType=cv2.LINE_AA)
+
+        # draw circles
+        # c[0] -> (cX, xY)
+        # c[1] -> r
+        # c[2] -> pencil_color
+        for c in circles:
+            cv2.circle(white_window, c[0], c[1], c[2], -1)
+            cv2.circle(image, c[0], c[1], c[2], -1)
+
+        # draw rectangles
+        # r[0] -> (x1, y1)
+        # r[1] -> (x2, y2)
+        # r[2] -> pencil_color
+        for r in rectangles:
+            cv2.rectangle(white_window, r[0], r[1], r[2], -1)
+            cv2.rectangle(image, r[0], r[1], r[2], -1)
 
         cv2.imshow(window_name_segmentation, image)
         cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
