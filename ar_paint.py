@@ -411,6 +411,7 @@ def main():
 
     last_coordinates = ''                                                                                               # Initialization of an auxiliary variable.
     all_coordinates = []
+    polys = [] # save all polygons and colors, structure -> (np.array(polygon), color)
     data = json.load(open(args.get('json')))
 
     if (data['limits']['B']['min'] > data['limits']['G']['min']) and (data['limits']['B']['min'] > data['limits']['R']['min']):
@@ -427,6 +428,8 @@ def main():
         _, image = capture.read()
         image = cv2.flip(image, 1)                                                                                      # Get an image from the camera and store them at "image" variable.
         image_raw = copy.copy(image)                                                                                    # Do a copy of image for show the original
+
+
         if image is None:                                                                                               # Check if there are no camera image.
             print(Fore.YELLOW + Style.BRIGHT + 'Video is over, terminating.' + Style.RESET_ALL)                         # Test finished message.
             break                                                                                                       # Break/Stops the loop.
@@ -499,6 +502,7 @@ def main():
         elif (key == ord('c')) or (key == ord('C')):                                                                    # Check if user pressed the 'c' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Image cleared.' + Style.RESET_ALL)                                      # Image cleared message.
             all_coordinates.clear()
+            polys.clear()
             white_window.fill(255)
         elif (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
@@ -537,9 +541,11 @@ def main():
                     r = int(math.sqrt((circleX - cX1) ** 2 + (circleY - cY1) ** 2))     # Calculates the distance between the initial centroid position and the current centroid position
                     #cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
                     cv2.circle(image, (circleX, circleY), r, pencil_color, -1)                                          # Draws circle with variable radius on camera
+
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
+
                 if (key1 == ord('o')) or (key1 == ord('O')):
                     cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)                                   # Draws the circle with the chosen size
                     break
@@ -582,6 +588,7 @@ def main():
             circleX = last_coordinates[0]
             circleY = last_coordinates[1]
             points = []
+
             while True:
                 key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
                 _, image = capture.read()
@@ -613,6 +620,7 @@ def main():
                         for i in range(1, len(points)):
                             cv2.line(image, points[i], points[i - 1], pencil_color, 1)                                  # Draws line between the current saved point and the last point on camera
                             cv2.line(white_window, points[i], points[i - 1], pencil_color, 1)                           # Draws line between the current saved point and the last point on whiteboard
+
                     cv2.imshow('Original Video Image', image_raw)  # show original image
                     cv2.imshow('white_window', white_window)  # Display the white window.
                     cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
@@ -622,7 +630,7 @@ def main():
                         print(Fore.YELLOW + Style.BRIGHT + 'No points were given.' + Style.RESET_ALL)
                         break
                     else:
-                        cv2.fillPoly(white_window,np.array([points]),pencil_color,lineType=cv2.LINE_AA)                     # Draws the polygon with all the points and fill
+                        polys.append( (np.array([points]), pencil_color)) #save polys for future drawing
                         break
 
         for i in range(2, len(all_coordinates)):
@@ -642,6 +650,12 @@ def main():
 
 
 
+        #draw polys
+        # p[0] -> np.array(polygon)
+        # p[1] -> pencil_color
+        for p in polys:
+            cv2.fillPoly(image, p[0], p[1], lineType=cv2.LINE_AA)
+            cv2.fillPoly(white_window, p[0], p[1], lineType=cv2.LINE_AA)
 
         cv2.imshow(window_name_segmentation, image)
         cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
