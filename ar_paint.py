@@ -510,8 +510,8 @@ def main():
             cv2.imwrite('drawing_' + date_format + '.png', image)                                                       # Save image as png.
         elif (key == ord('o')) or (key == ord('O')):                                                                    # Check if user pressed the 'o' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
-            circleX = last_coordinates[0]                                                                               # Saves centroid x position
-            circleY = last_coordinates[1]                                                                               # Saves centroid y position
+            circleX = cX                                                                              # Saves centroid x position
+            circleY = cY                                                                             # Saves centroid y position
             while True:
                 key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
                 _, image = capture.read()
@@ -534,7 +534,7 @@ def main():
                     cv2.line(image_raw, (cX1, cY1), (cX1, cY1 - 4), (0, 0, 0), 2)                                       # Draw part of the cross on the centroid
                     cv2.line(image_raw, (cX1, cY1), (cX1, cY1 + 4), (0, 0, 0), 2)                                       # Draw part of the cross on the centroid
                     last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
-                    r = int(math.sqrt((circleX - last_coordinates[0]) ** 2 + (circleY - last_coordinates[1]) ** 2))     # Calculates the distance between the initial centroid position and the current centroid position
+                    r = int(math.sqrt((circleX - cX1) ** 2 + (circleY - cY1) ** 2))     # Calculates the distance between the initial centroid position and the current centroid position
                     #cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
                     cv2.circle(image, (circleX, circleY), r, pencil_color, -1)                                          # Draws circle with variable radius on camera
                     cv2.imshow('Original Video Image', image_raw)  # show original image
@@ -545,8 +545,8 @@ def main():
                     break
         elif (key == ord('s')) or (key == ord('S')):                                                                    # Check if user pressed the 's' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing rectangle.' + Style.RESET_ALL)
-            circleX = last_coordinates[0]
-            circleY = last_coordinates[1]
+            circleX = cX
+            circleY = cY
             while True:
                 key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
                 _, image = capture.read()
