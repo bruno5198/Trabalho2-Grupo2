@@ -444,7 +444,7 @@ def main():
     print('\n=> Keys that you can press.')  # Preliminary notes
     print('    => ' + Fore.YELLOW + Style.BRIGHT + '"w" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"W" ' + Style.RESET_ALL + 'key -> Save your drawing!')  # Preliminary notes
     print('    => ' + Fore.YELLOW + Style.BRIGHT + '"q" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"Q" ' + Style.RESET_ALL + 'key -> Abort!')  # Preliminary notes
-    print('   => ' + Fore.YELLOW + Style.BRIGHT + '"c" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"C" ' + Style.RESET_ALL + 'key -> Clear image!')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"c" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"C" ' + Style.RESET_ALL + 'key -> Clear image!')  # Preliminary notes
     print('    => ' + Fore.YELLOW + Style.BRIGHT + '"+" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"-" ' + Style.RESET_ALL + 'key -> Increase/decrease pencil thickness')  # Preliminary notes
     print('    => ' + Fore.YELLOW + Style.BRIGHT + '"b" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"B" ' + Style.RESET_ALL + 'key -> Change pencil color to Blue! (By default)')  # Preliminary notes.
     print('    => ' + Fore.YELLOW + Style.BRIGHT + '"g" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"G" ' + Style.RESET_ALL + 'key -> Change pencil color to Green!')  # Preliminary notes.
