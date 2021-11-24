@@ -78,8 +78,20 @@ def main():
         print(Fore.RED + Style.BRIGHT + 'error: Invalid input argument!' + Style.RESET_ALL)                             # Error message.
         exit()                                                                                                          # Stops the program.
 
-    capture = cv2.VideoCapture(args.get('camera_number'))
+    print('\n========== PSR Ar Paint - Color Segmenter(Grupo 2) ==========\n')  # Initial message.
+    print('    => To change camera, use -cn or --camera_number (default is 0)')  # Initial message.
+    print('    => There are 6 Trackbars available to change the RGB parameters')  # Initial message.
+    print('    => Trackbar min B changes the minimum value of ' + Fore.BLUE + Style.BRIGHT + 'blue ' + Style.RESET_ALL )  # Initial message.
+    print('    => Trackbar max B changes the maximum value of ' + Fore.BLUE + Style.BRIGHT + 'blue ' + Style.RESET_ALL)  # Initial message.
+    print('    => Trackbar min G changes the minimum value of ' + Fore.GREEN + Style.BRIGHT + 'green ' + Style.RESET_ALL)  # Initial message.
+    print('    => Trackbar max G changes the maximum value of ' + Fore.GREEN + Style.BRIGHT + 'green ' + Style.RESET_ALL)  # Initial message.)  # Initial message.
+    print('    => Trackbar min R changes the minimum value of ' + Fore.RED + Style.BRIGHT + 'red ' + Style.RESET_ALL )  # Initial message.
+    print('    => Trackbar max R changes the maximum value of ' + Fore.RED + Style.BRIGHT + 'red ' + Style.RESET_ALL)  # Initial message.
+    print('\n=> Keys that you can press.')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"w" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"W" ' + Style.RESET_ALL + 'key -> Save the chosen RGB parameters and exits program!')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"q" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"Q" ' + Style.RESET_ALL + 'key -> Exits program without saving RGB parameters!')  # Preliminary notes
 
+    capture = cv2.VideoCapture(args.get('camera_number'))
     testDevice(capture, args.get('camera_number'))                                                                      # Call 'testDevice' function to check if selected camera is available.
 
     cv2.namedWindow(window_name_segmentation, cv2.WINDOW_AUTOSIZE)                                                      # Window Setup.

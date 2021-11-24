@@ -435,8 +435,26 @@ def main():
         class_report.run()                                                                                              # Call class "run()".
         exit()                                                                                                          # Stops the program.
 
-    capture = cv2.VideoCapture(0)                                                                                       # Setup video capture for camera.
+    print('\n========== PSR Ar Paint - (Grupo 2) ==========\n')  # Initial message.
+    print('=> Program initial conditions.')
+    print('    => To change pencil size, use -pt or --pencilThickness (default is size 10)')  # Initial message.
+    print('    => To use shake prevention, use -usp or --use_shake_protection ')  # Initial message.
+    print('    => Use -j or --json to select file to read RGB parameters ')  # Initial message.
+    print('    => Initial pencil color: Depends on color_segmenter chosen color for RGB\n')  # Initial message.
+    print('\n=> Keys that you can press.')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"w" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"W" ' + Style.RESET_ALL + 'key -> Save your drawing!')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"q" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"Q" ' + Style.RESET_ALL + 'key -> Abort!')  # Preliminary notes
+    print('   => ' + Fore.YELLOW + Style.BRIGHT + '"c" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"C" ' + Style.RESET_ALL + 'key -> Clear image!')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"+" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"-" ' + Style.RESET_ALL + 'key -> Increase/decrease pencil thickness')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"b" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"B" ' + Style.RESET_ALL + 'key -> Change pencil color to Blue! (By default)')  # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"g" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"G" ' + Style.RESET_ALL + 'key -> Change pencil color to Green!')  # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"r" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"R" ' + Style.RESET_ALL + 'key -> Change pencil color to Red!')
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"o" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"O" ' + Style.RESET_ALL + 'key -> Draw a circle! Press once to start drawing and press once more to add circle.')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"s" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"S" ' + Style.RESET_ALL + 'key -> Draw an rectangle! Press once to start drawing and press once more to add rectangle.')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"p" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"P" ' + Style.RESET_ALL + 'key -> Draw a polygon! Press once to start drawing and press again to add points to the polygon')  # Preliminary notes
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"x" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"X" ' + Style.RESET_ALL + 'key -> Draws the polygon with the chosen points!')  # Preliminary notes
 
+    capture = cv2.VideoCapture(0)                                                                                       # Setup video capture for camera.
     window_name_segmentation = 'Segmentation'                                                                           # Set window name.
 
     cv2.namedWindow(window_name_segmentation, cv2.WINDOW_AUTOSIZE)                                                      # Window Setup.
