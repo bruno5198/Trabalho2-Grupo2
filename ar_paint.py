@@ -424,7 +424,7 @@ def main():
                                interpolation=cv2.INTER_AREA)
 
         image_raw = copy.copy(image)                                                                                    # Do a copy of image for show the original
-
+        image_processed= copy.copy(image)
 
 
         if image is None:                                                                                               # Check if there are no camera image.
@@ -436,14 +436,14 @@ def main():
         if list(data['limits'].keys())[0] == 'H':                                                                       # Checks if color segmenter it was defined based in HSV.
             mins = np.array([data['limits']['H']['min'], data['limits']['S']['min'], data['limits']['V']['min']])       # Gets minimum HSV color values from data variable.
             maxs = np.array([data['limits']['H']['max'], data['limits']['S']['max'], data['limits']['V']['max']])       # Gets maximum HSV color values from data variable.
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+            image_processed = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         elif list(data['limits'].keys())[0] == 'B':                                                                     # Checks if color segmenter it was defined based in RGB.
             mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])       # Gets minimum RGB color values from data variable.
             maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])       # Gets maximum RGB color values from data variable.
 
 
-        image_processed = cv2.inRange(image, mins, maxs)                                                                # Process original image/video according to RGB/HSV color values range.
+        image_processed = cv2.inRange(image_processed, mins, maxs)                                                                # Process original image/video according to RGB/HSV color values range.
 
         mask = np.ndarray((height, width), dtype=np.uint8)                                                              # Create a mask with the same size as image.
         mask.fill(0)                                                                                                    # Fill the mask with white.
