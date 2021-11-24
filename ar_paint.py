@@ -41,13 +41,13 @@ class adc_func_4_5(object):
         self.af4_image_width = 0                                                                                        # Variable initialization. Image width default value.
         self.af4_image_height = 0                                                                                       # Variable initialization. Image height default value.
 
-        if self.original_image is None:                                                                                 # Condition to check problems with default image path.
-            print('\n' + Fore.RED + Style.BRIGHT + 'Error!' + Style.RESET_ALL + ' Check default image path (' + self.original_image + '!' + '\n')  # Default image path error message.
-            exit()                                                                                                      # Stops the program.
+        if self.original_image is None:                                                                                                                 # Condition to check problems with default image path.
+            print('\n' + Fore.RED + Style.BRIGHT + 'Error!' + Style.RESET_ALL + ' Check default image path (' + self.original_image + '!' + '\n')       # Default image path error message.
+            exit()                                                                                                                                      # Stops the program.
 
-        if os.path.isfile(self.original_image) is False:                                                                # Condition to check problems with user defined image path.
-            print('\n' + Fore.RED + Style.BRIGHT + 'Error!' + Style.RESET_ALL + ' Check inserted image path (' + self.original_image + ')!' + '\n')  # User defined image path error message.
-            exit()                                                                                                      # Stops the program.
+        if os.path.isfile(self.original_image) is False:                                                                                                # Condition to check problems with user defined image path.
+            print('\n' + Fore.RED + Style.BRIGHT + 'Error!' + Style.RESET_ALL + ' Check inserted image path (' + self.original_image + ')!' + '\n')     # User defined image path error message.
+            exit()                                                                                                                                      # Stops the program.
 
         print('\n========== PSR Ar Paint - Advanced Funcionality 4 and 5(Grupo 2) ==========\n')                                                        # Initial message.
         print('=> Program initial conditions.')
@@ -59,7 +59,7 @@ class adc_func_4_5(object):
         print('    => Region Number 1 -> ' + Fore.BLUE + Style.BRIGHT + 'Blue' + Style.RESET_ALL + ' Color.')                                           # Preliminary notes.
         print('    => Region Number 2 -> ' + Fore.GREEN + Style.BRIGHT + 'Green' + Style.RESET_ALL + ' Color.')                                         # Preliminary notes.
         print('    => Region Number 3 -> ' + Fore.RED + Style.BRIGHT + 'Red' + Style.RESET_ALL + ' Color.')                                             # Preliminary notes.
-        print('\n=> Keys that you can press.')                                                                          # Preliminary notes
+        print('\n=> Keys that you can press.')                                                                                                          # Preliminary notes
         print('    => ' + Fore.YELLOW + Style.BRIGHT + '"f" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"F" ' + Style.RESET_ALL + 'key -> Evaluate your paint accuracy!')                                                 # Preliminary notes
         print('    => ' + Fore.YELLOW + Style.BRIGHT + '"q" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"Q" ' + Style.RESET_ALL + 'key -> Abort!')                                                                        # Preliminary notes
         print('    => ' + Fore.YELLOW + Style.BRIGHT + '"c" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"C" ' + Style.RESET_ALL + 'key -> Clear image!')                                                                        # Preliminary notes
@@ -113,8 +113,8 @@ class adc_func_4_5(object):
 
             data = json.load(open(self.jsonFile))                                                                       # Get .json file data and store them at 'data' variable.
 
-            mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])   # Gets minimum RGB color values from data variable.
-            maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])   # Gets maximum RGB color values from data variable.
+            mins = np.array([data['limits']['B']['min'], data['limits']['G']['min'], data['limits']['R']['min']])       # Gets minimum RGB color values from data variable.
+            maxs = np.array([data['limits']['B']['max'], data['limits']['G']['max'], data['limits']['R']['max']])       # Gets maximum RGB color values from data variable.
 
             _, self.pencil_color = color_detection(self.jsonFile)
 
@@ -138,7 +138,6 @@ class adc_func_4_5(object):
                 cv2.line(self.aux_image2, all_coordinates[i], all_coordinates[i - 1], self.pencil_color, self.thickness)    # Draw in white board.
                 cv2.line(self.aux_image, all_coordinates[i], all_coordinates[i - 1], self.pencil_color, self.thickness)     # Draw in white board.
 
-            # cv2.imshow('Original Video Image', image)                                                                   # Show original image.
             cv2.imshow(self.window_name, self.aux_image2)                                                               # Display the white window.
 
             key = cv2.waitKey(20)                                                                                       # Wait for a key press before proceeding.
@@ -351,11 +350,12 @@ class adc_func_4_5(object):
                 while True:
                     key = cv2.waitKey(20)                                                                               # Wait for a key press before proceeding.
                     if (key == ord('n')) or (key == ord('N')):                                                          # Check if user pressed the 'n' key or closed the window.
-                        pass
+                        break                                                                                           # Break/Stops the loop.
                     elif (key == ord('y')) or (key == ord('Y')):                                                        # Check if user pressed the 'y' key.
                         print(Fore.YELLOW + Style.BRIGHT + 'Image cleared.' + Style.RESET_ALL)                          # Image cleared message.
                         self.aux_image2 = copy.copy(self.image_clear)                                                   # Copy clear image to variable "aux_image2".
                         cv2.imshow(self.window_name, self.image_clear)                                                  # Display image enumeration.
+                        break                                                                                           # Break/Stops the loop.
 
 
 class adc_func_3(object):
@@ -390,23 +390,22 @@ class adc_func_3(object):
         cv2.fillPoly(self.image_raw, pts=[largest_item], color=(0, 255, 0))
         cv2.polylines(self.image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
         cX1, cY1 = moments_calc(self.mask)                                                                              # Call moments_calc() function to get centroid.
-        cv2.line(self.image_raw, (cX1, cY1), (cX1 + cetroid_offset, cY1), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid
-        cv2.line(self.image_raw, (cX1, cY1), (cX1 - cetroid_offset, cY1), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid
-        cv2.line(self.image_raw, (cX1, cY1), (cX1, cY1 - cetroid_offset), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid
-        cv2.line(self.image_raw, (cX1, cY1), (cX1, cY1 + cetroid_offset), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid
+        cv2.line(self.image_raw, (cX1, cY1), (cX1 + cetroid_offset, cY1), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid.
+        cv2.line(self.image_raw, (cX1, cY1), (cX1 - cetroid_offset, cY1), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid.
+        cv2.line(self.image_raw, (cX1, cY1), (cX1, cY1 - cetroid_offset), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid.
+        cv2.line(self.image_raw, (cX1, cY1), (cX1, cY1 + cetroid_offset), centroid_color, cetroid_dimension)            # Draw part of the cross on the centroid.
         return cX1, cY1
 
     # ------------------------------------------------------------
     # Termination
     # ------------------------------------------------------------
     def adc_func_3_termination(self, image, white_window, window_name_segmentation):
-        cv2.imshow('Original Video Image', self.image_raw)                                                              # show original image
+        cv2.imshow('Original Video Image', self.image_raw)                                                              # show original image.
         cv2.imshow('white_window', white_window)                                                                        # Display the white window.
         cv2.imshow(window_name_segmentation, image)                                                                     # Display the original image/video.
 
 
 def color_detection(args_json):
-
     data = json.load(open(args_json))
 
     if (data['limits']['B']['min'] > data['limits']['G']['min']) and (data['limits']['B']['min'] > data['limits']['R']['min']):
@@ -435,24 +434,24 @@ def main():
         class_report.run()                                                                                              # Call class "run()".
         exit()                                                                                                          # Stops the program.
 
-    print('\n========== PSR Ar Paint - (Grupo 2) ==========\n')  # Initial message.
-    print('=> Program initial conditions.')
-    print('    => To change pencil size, use -pt or --pencilThickness (default is size 10)')  # Initial message.
-    print('    => To use shake prevention, use -usp or --use_shake_protection ')  # Initial message.
-    print('    => Use -j or --json to select file to read RGB parameters ')  # Initial message.
-    print('    => Initial pencil color: Depends on color_segmenter chosen color for RGB\n')  # Initial message.
-    print('\n=> Keys that you can press.')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"w" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"W" ' + Style.RESET_ALL + 'key -> Save your drawing!')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"q" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"Q" ' + Style.RESET_ALL + 'key -> Abort!')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"c" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"C" ' + Style.RESET_ALL + 'key -> Clear image!')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"+" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"-" ' + Style.RESET_ALL + 'key -> Increase/decrease pencil thickness')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"b" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"B" ' + Style.RESET_ALL + 'key -> Change pencil color to Blue! (By default)')  # Preliminary notes.
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"g" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"G" ' + Style.RESET_ALL + 'key -> Change pencil color to Green!')  # Preliminary notes.
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"r" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"R" ' + Style.RESET_ALL + 'key -> Change pencil color to Red!')
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"o" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"O" ' + Style.RESET_ALL + 'key -> Draw a circle! Press once to start drawing and press once more to add circle.')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"s" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"S" ' + Style.RESET_ALL + 'key -> Draw an rectangle! Press once to start drawing and press once more to add rectangle.')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"p" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"P" ' + Style.RESET_ALL + 'key -> Draw a polygon! Press once to start drawing and press again to add points to the polygon')  # Preliminary notes
-    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"x" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"X" ' + Style.RESET_ALL + 'key -> Draws the polygon with the chosen points!')  # Preliminary notes
+    print('\n========== PSR Ar Paint - (Grupo 2) ==========\n')                                                                                                                                                                                     # Initial message.
+    print('=> Program initial conditions.')                                                                                                                                                                                                         # Initial message.
+    print('    => To change pencil size, use -pt or --pencilThickness (default is size 10)')                                                                                                                                                        # Initial message.
+    print('    => To use shake prevention, use -usp or --use_shake_protection ')                                                                                                                                                                    # Initial message.
+    print('    => Use -j or --json to select file to read RGB parameters ')                                                                                                                                                                         # Initial message.
+    print('    => Initial pencil color: Depends on color_segmenter chosen color for RGB\n')                                                                                                                                                         # Initial message.
+    print('\n=> Keys that you can press.')                                                                                                                                                                                                          # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"w" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"W" ' + Style.RESET_ALL + 'key -> Save your drawing!')                                                                          # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"q" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"Q" ' + Style.RESET_ALL + 'key -> Abort!')                                                                                      # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"c" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"C" ' + Style.RESET_ALL + 'key -> Clear image!')                                                                                # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"+" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"-" ' + Style.RESET_ALL + 'key -> Increase/decrease pencil thickness')                                                          # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"b" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"B" ' + Style.RESET_ALL + 'key -> Change pencil color to Blue! (By default)')                                                   # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"g" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"G" ' + Style.RESET_ALL + 'key -> Change pencil color to Green!')                                                               # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"r" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"R" ' + Style.RESET_ALL + 'key -> Change pencil color to Red!')                                                                 # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"o" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"O" ' + Style.RESET_ALL + 'key -> Draw a circle! Press once to start drawing and press once more to add circle.')               # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"s" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"S" ' + Style.RESET_ALL + 'key -> Draw an rectangle! Press once to start drawing and press once more to add rectangle.')        # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"p" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"P" ' + Style.RESET_ALL + 'key -> Draw a polygon! Press once to start drawing and press again to add points to the polygon')    # Preliminary notes.
+    print('    => ' + Fore.YELLOW + Style.BRIGHT + '"x" ' + Style.RESET_ALL + 'or ' + Fore.YELLOW + Style.BRIGHT + '"X" ' + Style.RESET_ALL + 'key -> Draws the polygon with the chosen points!')                                                   # Preliminary notes.
 
     capture = cv2.VideoCapture(0)                                                                                       # Setup video capture for camera.
     window_name_segmentation = 'Segmentation'                                                                           # Set window name.
@@ -468,20 +467,12 @@ def main():
     cetroid_dimension = 2                                                                                               # Set centroid default dimension.
     cetroid_offset = 4                                                                                                  # Set centroid default offset.
 
-    last_coordinates = ''                                                                                               # Initialization of an auxiliary variable.
     all_coordinates = []
     polys = []                                                                                                          # Save all polygons and colors, structure -> (np.array(polygon), color).
     circles = []                                                                                                        # Save all circles and colors, struct -> ( (circleX, circleY), r, pencil_color ).
     rectangles = []                                                                                                     # Save all rectangles and colors, struct -> ( (x1, y1), (x2, y2), pencil_color ).
 
-    data, pencil_color = color_detection(args.get('json'))
-
-    # if (data['limits']['B']['min'] > data['limits']['G']['min']) and (data['limits']['B']['min'] > data['limits']['R']['min']):
-    #     pencil_color = (255, 0, 0)                                                                                                      # Set pencil color (Blue).
-    # elif (data['limits']['G']['min'] > data['limits']['B']['min']) and (data['limits']['G']['min'] > data['limits']['R']['min']):
-    #     pencil_color = (0, 255, 0)                                                                                                      # Set pencil color (Green).
-    # elif (data['limits']['R']['min'] > data['limits']['B']['min']) and (data['limits']['R']['min'] > data['limits']['G']['min']):
-    #     pencil_color = (0, 0, 255)                                                                                                      # Set pencil color (Red).
+    data, pencil_color = color_detection(args.get('json'))                                                              # Call function "color_detection()".
 
     # ------------------------------------------------------------
     # EXECUTION
@@ -503,11 +494,11 @@ def main():
         mask = np.ndarray((height, width), dtype=np.uint8)                                                              # Create a mask with the same size as image.
         mask.fill(0)                                                                                                    # Fill the mask with white.
 
-        class_report = adc_func_3(height, width)  # Call class "adc_func_3()".
+        class_report = adc_func_3(height, width)                                                                        # Call class "adc_func_3()".
 
         # Contour detection and isolation of biggest contour + fill
         if np.mean(image_processed) > 0:
-            contours, _ = cv2.findContours(image_processed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)           # Get "image_processed" external contour.
+            contours, _ = cv2.findContours(image_processed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)                   # Get "image_processed" external contour.
             sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)                                       # Get contour area.
             largest_item = sorted_contours[0]                                                                           # Get largest item/contour.
             cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))                                               # Fill contour with white color.
@@ -533,25 +524,20 @@ def main():
         elif (key == ord('r')) or (key == ord('Q')):                                                                    # Check if user pressed the 'r' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Red.' + Style.RESET_ALL)                         # Pencil color changed message.
             pencil_color = (0, 0, 255)                                                                                  # Change pencil color to red.
-            #all_coordinates.clear()
         elif (key == ord('g')) or (key == ord('G')):                                                                    # Check if user pressed the 'g' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Green.' + Style.RESET_ALL)                       # Pencil color changed message.
             pencil_color = (0, 255, 0)                                                                                  # Change pencil color to green.
-            #all_coordinates.clear()
         elif (key == ord('b')) or (key == ord('B')):                                                                    # Check if user pressed the 'b' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Pencil color change to Blue.' + Style.RESET_ALL)                        # Pencil color changed message.
             pencil_color = (255, 0, 0)                                                                                  # Change pencil color to blue.
-            #all_coordinates.clear()
         elif key == ord('+'):                                                                                           # Check if user pressed the '+' key.
-            print(Fore.YELLOW + Style.BRIGHT + 'Pencil size: ' + str(pencil_dimension) + ' (bigger).'  + Style.RESET_ALL)                        # Pencil size changed message.
+            print(Fore.YELLOW + Style.BRIGHT + 'Pencil size: ' + str(pencil_dimension) + ' (bigger).'  + Style.RESET_ALL)   # Pencil size changed message.
             pencil_dimension = pencil_dimension + 1                                                                     # Increase pencil dimension.
-            #all_coordinates.clear()
-        elif (key == ord('-')):                                                                                         # Check if user pressed the '-' key.
-            print(Fore.YELLOW + Style.BRIGHT + 'Pencil size: ' + str(pencil_dimension) + ' (smaller).' + Style.RESET_ALL)                       # Pencil size changed message.
+        elif key == ord('-'):                                                                                           # Check if user pressed the '-' key.
+            print(Fore.YELLOW + Style.BRIGHT + 'Pencil size: ' + str(pencil_dimension) + ' (smaller).' + Style.RESET_ALL)   # Pencil size changed message.
             pencil_dimension = pencil_dimension - 1                                                                     # Decrease pencil dimension.
-            if (pencil_dimension <=1):
+            if pencil_dimension <= 1:
                 pencil_dimension = 1
-            #all_coordinates.clear()
         elif (key == ord('c')) or (key == ord('C')):                                                                    # Check if user pressed the 'c' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Image cleared.' + Style.RESET_ALL)                                      # Image cleared message.
             all_coordinates.clear()
@@ -559,161 +545,72 @@ def main():
             circles.clear()
             rectangles.clear()
             white_window.fill(255)
-        #elif (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
-           # print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
-           # current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
-           # month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
-            #current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
-            #current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
-            #date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
-            #cv2.imwrite('drawing_hhh' + date_format + '.png', window_name_segmentation)
-           # cv2.imwrite('drawing_tela_branca' + date_format + '.png', white_window)                                                # Save image as png.
-
         elif (key == ord('o')) or (key == ord('O')):                                                                    # Check if user pressed the 'o' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
-            circleX = cX                                                                                                # Saves centroid x position
-            circleY = cY                                                                                                # Saves centroid y position
+            circleX = cX                                                                                                # Saves centroid x position.
+            circleY = cY                                                                                                # Saves centroid y position.
             while True:
-                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
+                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press.
                 _, image = capture.read()
                 image = cv2.flip(image, 1)                                                                              # Get an image from the camera and store them at "image" variable.
-
                 image_processed = class_report.adc_func_3_main(image, mins, maxs)                                       # Call class function "adc_func_3_main()".
-
-                # image_raw = copy.copy(image)  # Do a copy of image for show the original
-                # mask = np.ndarray((height, width), dtype=np.uint8)  # Create a mask with the same size as image.
-                # mask.fill(0)
-                # image_processed = cv2.inRange(image, mins, maxs)  # Process original image/video according to RGB color values range.
-                # # Contour detection and isolation of biggest contour + fill
+                # Contour detection and isolation of biggest contour + fill
                 if np.mean(image_processed) > 0:
                     (cX1, cY1) = class_report.adc_func_3_execution(centroid_color, cetroid_dimension, cetroid_offset)   # Call class function "adc_func_3_execution()".
-
-                    # contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)  # Get "image_processed" external contour.
-                    # sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)  # Get contour area.
-                    # largest_item = sorted_contours[0]  # Get largest item/contour.
-                    # cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))  # Fill contour with white color.
-                    # cv2.fillPoly(image_raw, pts=[largest_item], color=(0, 255, 0))
-                    # cv2.polylines(image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
-                    # cX1, cY1 = moments_calc(mask)                                                                       # Call moments_calc() function to get centroid.
-                    # # cv2.line(image_raw, (cX1, cY1), (cX1 + 4, cY1), (0, 0, 0), 2)                                       # Draw part of the cross on the centroid
-                    # # cv2.line(image_raw, (cX1, cY1), (cX1 - 4, cY1), (0, 0, 0), 2)                                       # Draw part of the cross on the centroid
-                    # # cv2.line(image_raw, (cX1, cY1), (cX1, cY1 - 4), (0, 0, 0), 2)                                       # Draw part of the cross on the centroid
-                    # # cv2.line(image_raw, (cX1, cY1), (cX1, cY1 + 4), (0, 0, 0), 2)                                       # Draw part of the cross on the centroid
-                    # last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
                     r = int(math.sqrt((circleX - cX1) ** 2 + (circleY - cY1) ** 2))                                     # Calculates the distance between the initial centroid position and the current centroid position
-                    #cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)
                     cv2.circle(image, (circleX, circleY), r, pencil_color, -1)                                          # Draws circle with variable radius on camera
-
                     class_report.adc_func_3_termination(image, white_window, window_name_segmentation)                  # Call class function "adc_func_3_termination()".
-
-                    # cv2.imshow('Original Video Image', image_raw)  # show original image
-                    # cv2.imshow('white_window', white_window)  # Display the white window.
-                    # cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
-
                 if (key1 == ord('o')) or (key1 == ord('O')):
-                    #cv2.circle(white_window, (circleX, circleY), r, pencil_color, -1)                                   # Draws the circle with the chosen size
-                    circles.append(((circleX, circleY), r, pencil_color)) #save circles for future drawing
-
+                    circles.append(((circleX, circleY), r, pencil_color))                                               # Save circles for future drawing.
                     break
         elif (key == ord('s')) or (key == ord('S')):                                                                    # Check if user pressed the 's' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing rectangle.' + Style.RESET_ALL)
             circleX = cX
             circleY = cY
             while True:
-                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
+                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press.
                 _, image = capture.read()
-                image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
-
+                image = cv2.flip(image, 1)                                                                              # Get an image from the camera and store them at "image" variable.
                 class_report = adc_func_3(height, width)                                                                # Call class "adc_func_3()".
                 image_processed = class_report.adc_func_3_main(image, mins, maxs)                                       # Call class function "adc_func_3_main()".
-
-                # image_raw = copy.copy(image)  # Do a copy of image for show the original
-                # mask = np.ndarray((height, width), dtype=np.uint8)  # Create a mask with the same size as image.
-                # mask.fill(0)
-                # image_processed = cv2.inRange(image, mins,maxs)  # Process original image/video according to RGB color values range.
-                # # Contour detection and isolation of biggest contour + fill
+                # Contour detection and isolation of biggest contour + fill
                 if np.mean(image_processed) > 0:
                     (cX1, cY1) = class_report.adc_func_3_execution(centroid_color, cetroid_dimension, cetroid_offset)  # Call class function "adc_func_3_execution()".
-
-                    # contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)  # Get "image_processed" external contour.
-                    # sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)  # Get contour area.
-                    # largest_item = sorted_contours[0]  # Get largest item/contour.
-                    # cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))  # Fill contour with white color.
-                    # cv2.fillPoly(image_raw, pts=[largest_item], color=(0, 255, 0))
-                    # cv2.polylines(image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
-                    # cX1, cY1 = moments_calc(mask)                                                                       # Call moments_calc() function to get centroid.
-                    # cv2.line(image_raw, (cX1, cY1), (cX1 + 4, cY1), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # cv2.line(image_raw, (cX1, cY1), (cX1 - 4, cY1), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # cv2.line(image_raw, (cX1, cY1), (cX1, cY1 - 4), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # cv2.line(image_raw, (cX1, cY1), (cX1, cY1 + 4), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
-                    # #cv2.rectangle(white_window,(circleX,circleY), (cX1,cY1),pencil_color,-1)
-                    cv2.rectangle(image, (circleX, circleY), (cX1, cY1), pencil_color, -1)                              # Draws rectangle with variable size on camera
+                    cv2.rectangle(image, (circleX, circleY), (cX1, cY1), pencil_color, -1)                              # Draws rectangle with variable size on camera.
 
                     class_report.adc_func_3_termination(image, white_window, window_name_segmentation)                  # Call class function "adc_func_3_termination()".
-
-                    # cv2.imshow('Original Video Image', image_raw)  # show original image
-                    # cv2.imshow('white_window', white_window)  # Display the white window.
-                    # cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
                 if key1 == ord('s') or (key1 == ord('S')):
-                    #cv2.rectangle(white_window, (circleX, circleY), (cX1, cY1), pencil_color, -1)                       # Draws the square with the chosen size
                     rectangles.append(((circleX, circleY), (cX1, cY1), pencil_color))
                     break
 
         elif (key == ord('p')) or (key == ord('P')):                                                                    # Check if user pressed the 'p' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing Polygon.' + Style.RESET_ALL)
-            # circleX = last_coordinates[0]
-            # circleY = last_coordinates[1]
             points = []
 
             while True:
-                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press
+                key1 = cv2.waitKey(10)                                                                                  # Waits for another key press.
                 _, image = capture.read()
-                image = cv2.flip(image, 1)  # Get an image from the camera and store them at "image" variable.
-
+                image = cv2.flip(image, 1)                                                                              # Get an image from the camera and store them at "image" variable.
                 class_report = adc_func_3(height, width)                                                                # Call class "adc_func_3()".
                 image_processed = class_report.adc_func_3_main(image, mins, maxs)                                       # Call class function "adc_func_3_main()".
-
-                # image_raw = copy.copy(image)  # Do a copy of image for show the original
-                # mask = np.ndarray((height, width), dtype=np.uint8)  # Create a mask with the same size as image.
-                # mask.fill(0)
-                # image_processed = cv2.inRange(image, mins,maxs)  # Process original image/video according to RGB color values range.
-                # # Contour detection and isolation of biggest contour + fill
+                # Contour detection and isolation of biggest contour + fill
                 if np.mean(image_processed) > 0:
-                    (cX1, cY1) = class_report.adc_func_3_execution(centroid_color, cetroid_dimension, cetroid_offset)  # Call class function "adc_func_3_execution()".
-
-                    # contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)  # Get "image_processed" external contour.
-                    # sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)  # Get contour area.
-                    # largest_item = sorted_contours[0]  # Get largest item/contour.
-                    # cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))  # Fill contour with white color.
-                    # cv2.fillPoly(image_raw, pts=[largest_item], color=(0, 255, 0))
-                    # cv2.polylines(image_raw, pts=[largest_item], isClosed=True, color=(0, 255, 255), thickness=5)
-                    # cX1, cY1 = moments_calc(mask)  # Call moments_calc() function to get centroid.
-                    # cv2.line(image_raw, (cX1, cY1), (cX1 + 4, cY1), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # cv2.line(image_raw, (cX1, cY1), (cX1 - 4, cY1), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # cv2.line(image_raw, (cX1, cY1), (cX1, cY1 - 4), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # cv2.line(image_raw, (cX1, cY1), (cX1, cY1 + 4), (0, 0, 0), 2)                                        # Draw part of the cross on the centroid
-                    # last_coordinates = (cX1, cY1)  # Save last centroid coordinates.
+                    (cX1, cY1) = class_report.adc_func_3_execution(centroid_color, cetroid_dimension, cetroid_offset)   # Call class function "adc_func_3_execution()".
                     if (key1 == ord('p')) or (key == ord('P')):
-                        points.append((cX1,cY1))                                                                        # Saves a new point to the polygon with the current centroid position
+                        points.append((cX1,cY1))                                                                        # Saves a new point to the polygon with the current centroid position.
                         print(Fore.YELLOW + Style.BRIGHT + 'Added point do Polygon.' + Style.RESET_ALL)
                     if len(points) > 0:
                         for i in range(1, len(points)):
-                            cv2.line(image, points[i], points[i - 1], pencil_color, 1)                                  # Draws line between the current saved point and the last point on camera
-                            cv2.line(white_window, points[i], points[i - 1], pencil_color, 1)                           # Draws line between the current saved point and the last point on whiteboard
+                            cv2.line(image, points[i], points[i - 1], pencil_color, 1)                                  # Draws line between the current saved point and the last point on camera.
+                            cv2.line(white_window, points[i], points[i - 1], pencil_color, 1)                           # Draws line between the current saved point and the last point on whiteboard.
 
                     class_report.adc_func_3_termination(image, white_window, window_name_segmentation)                  # Call class function "adc_func_3_termination()".
-
-                    # cv2.imshow('Original Video Image', image_raw)  # show original image
-                    # cv2.imshow('white_window', white_window)  # Display the white window.
-                    # cv2.imshow(window_name_segmentation, image)  # Display the original image/video.
-
                 if key1 == ord('x') or (key1 == ord('X')):
                     if len(points) == 0:
                         print(Fore.YELLOW + Style.BRIGHT + 'No points were given.' + Style.RESET_ALL)
                         break
                     else:
-                        polys.append((np.array([points]), pencil_color)) #save polys for future drawing
+                        polys.append((np.array([points]), pencil_color))                                                # Save polys for future drawing.
                         break
 
         for i in range(2, len(all_coordinates)):
@@ -729,7 +626,7 @@ def main():
                     cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])
             else:
                 cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])               # Draw in image.
-                cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])      # Draw in white board.
+                cv2.line(white_window, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])        # Draw in white board.
 
         # Draw polys.
         for p in polys:
@@ -747,21 +644,22 @@ def main():
             cv2.rectangle(image, r[0], r[1], r[2], -1)
 
         cv2.imshow(window_name_segmentation, image)
-        cv2.imshow('Original Video Image',image_raw)                                                                    # Show original image.
+        cv2.imshow('Original Video Image', image_raw)                                                                   # Show original image.
         cv2.imshow('white_window', white_window)                                                                        # Display the white window.
 
-        cv2.moveWindow(window_name_segmentation, 750, 0)  # Move it to (40,30)
-        cv2.moveWindow('Original Video Image', 0,0)  # Move it to (40,30)
-        cv2.moveWindow('white_window', 0, 730)  # Move it to (40,30)
-        if (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
-                    print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
-                    current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
-                    month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
-                    current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
-                    current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
-                    date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
-                    cv2.imwrite('drawing_camera' + date_format + '.png', image)
-                    cv2.imwrite('drawing_canvas' + date_format + '.png', white_window)
+        cv2.moveWindow(window_name_segmentation, 750, 0)                                                                # Move it to (40,30).
+        cv2.moveWindow('Original Video Image', 0, 0)                                                                    # Move it to (40,30).
+        cv2.moveWindow('white_window', 0, 730)                                                                          # Move it to (40,30).
+        if (key == ord('w')) or (key == ord('W')):                                                                      # Check if user pressed the 'w' key.
+            print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
+            current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
+            month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
+            current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Transform current month number to name/text.
+            current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
+            date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
+            cv2.imwrite('drawing_camera' + date_format + '.png', image)
+            cv2.imwrite('drawing_canvas' + date_format + '.png', white_window)
+
 
 if __name__ == '__main__':
     main()
