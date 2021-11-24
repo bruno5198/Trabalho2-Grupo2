@@ -559,14 +559,16 @@ def main():
             circles.clear()
             rectangles.clear()
             white_window.fill(255)
-        elif (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
-            print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
-            current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
-            month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
-            current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
-            current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
-            date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
-            cv2.imwrite('drawing_' + date_format + '.png', white_window)                                                # Save image as png.
+        #elif (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
+           # print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
+           # current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
+           # month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
+            #current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
+            #current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
+            #date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
+            #cv2.imwrite('drawing_hhh' + date_format + '.png', window_name_segmentation)
+           # cv2.imwrite('drawing_tela_branca' + date_format + '.png', white_window)                                                # Save image as png.
+
         elif (key == ord('o')) or (key == ord('O')):                                                                    # Check if user pressed the 'o' key.
             print(Fore.YELLOW + Style.BRIGHT + 'Drawing circle.' + Style.RESET_ALL)
             circleX = cX                                                                                                # Saves centroid x position
@@ -751,7 +753,15 @@ def main():
         cv2.moveWindow(window_name_segmentation, 750, 0)  # Move it to (40,30)
         cv2.moveWindow('Original Video Image', 0,0)  # Move it to (40,30)
         cv2.moveWindow('white_window', 0, 730)  # Move it to (40,30)
-
+        if (key == ord('w')) or (key == ord('W')):                                                                    # Check if user pressed the 'w' key.
+                    print(Fore.YELLOW + Style.BRIGHT + 'Image saved as PNG.' + Style.RESET_ALL)                                 # Image saved message.
+                    current_day_of_week = datetime.datetime.now().strftime("%a")                                                # Get current week day.
+                    month_number = str(datetime.datetime.today().month)                                                         # Get current month number.
+                    current_month = datetime.datetime.strptime(month_number, "%m").strftime("%b")                               # Tranform current month number to name/text.
+                    current_time = datetime.datetime.now().strftime("%d_%H:%M:%S_%Y")                                           # Get current day of month, time and year.
+                    date_format = str(current_day_of_week) + '_' + str(current_month) + '_' + str(current_time)                 # Concatenate all date parameters.
+                    cv2.imwrite('drawing_camera' + date_format + '.png', image)
+                    cv2.imwrite('drawing_canvas' + date_format + '.png', white_window)
 
 if __name__ == '__main__':
     main()
