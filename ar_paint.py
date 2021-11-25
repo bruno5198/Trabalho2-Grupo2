@@ -40,6 +40,7 @@ class adc_func_4_5(object):
         self.window_name = 'Advanced Functionality 4 and 5'                                                             # Variable initialization. Window default name.
         self.af4_image_width = 0                                                                                        # Variable initialization. Image width default value.
         self.af4_image_height = 0                                                                                       # Variable initialization. Image height default value.
+        self.window_video = 'Original Video Image'
 
         if self.original_image is None:                                                                                                                 # Condition to check problems with default image path.
             print('\n' + Fore.RED + Style.BRIGHT + 'Error!' + Style.RESET_ALL + ' Check default image path (' + self.original_image + '!' + '\n')       # Default image path error message.
@@ -103,9 +104,16 @@ class adc_func_4_5(object):
 
         changes_detected = False                                                                                        # Initialize variable that indicates if user change something or not.
 
+        cetroid_offset = 4
+        centroid_color = (0, 0, 0)
+        cetroid_dimension = 10
+
         while True:
             _, image = capture.read()                                                                                   # Read camera captured video.
             image = cv2.flip(image, 1)                                                                                  # Get an image from the camera and store them at "image" variable.
+
+            image_raw = copy.copy(image)
+
             image = cv2.resize(image, (self.af4_image_width, self.af4_image_height), interpolation=cv2.INTER_AREA)      # Resize image.
             if image is None:                                                                                           # Check if there are no camera image.
                 print(Fore.YELLOW + Style.BRIGHT + 'Video is over, terminating.' + Style.RESET_ALL)                     # Test finished message.
@@ -120,14 +128,33 @@ class adc_func_4_5(object):
 
             image_processed = cv2.inRange(image, mins, maxs)                                                            # Process original image/video according to RGB color values range.
 
+            original_image_processed = cv2.inRange(image_raw, mins, maxs)                                               # Process original image/video according to RGB color values range.
+
             mask = np.ndarray((self.af4_image_height, self.af4_image_width), dtype=np.uint8)                            # Create a mask with the same size as image.
             mask.fill(0)                                                                                                # Fill the mask with white.
 
+            image_raw_height, image_raw_width, _ = image_raw.shape
+            aux_mask = np.ndarray((image_raw_height, image_raw_width), dtype=np.uint8)                                  # Create a mask with the same size as image.
+            aux_mask.fill(0)                                                                                            # Fill the mask with white.
             if np.mean(image_processed) > 0:
                 contours, hierarchy = cv2.findContours(image_processed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)       # Get "image_processed" external contour.
                 sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)                                   # Get contour area.
                 largest_item = sorted_contours[0]                                                                       # Get largest item/contour.
                 cv2.fillPoly(mask, pts=[largest_item], color=(255, 255, 255))                                           # Fill contour with white color.
+
+                contours2, _ = cv2.findContours(original_image_processed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)  # Get "image_processed" external contour.
+                sorted_contours2 = sorted(contours2, key=cv2.contourArea, reverse=True)  # Get contour area.
+                largest_item2 = sorted_contours2[0]  # Get largest item/contour.
+                cv2.fillPoly(aux_mask, pts=[largest_item2], color=(255, 255, 255))  # Fill contour with white color.
+                cv2.fillPoly(image_raw, pts=[largest_item2], color=(0, 255, 0))
+                cv2.polylines(image_raw, pts=[largest_item2], isClosed=True, color=(0, 255, 255), thickness=5)
+                cX, cY = moments_calc(aux_mask)  # Call moments_calc() function to get centroid.
+                cv2.line(image_raw, (cX, cY), (cX + cetroid_offset, cY), centroid_color, cetroid_dimension)  # Draw part of the cross on the centroid.
+                cv2.line(image_raw, (cX, cY), (cX - cetroid_offset, cY), centroid_color, cetroid_dimension)  # Draw part of the cross on the centroid.
+                cv2.line(image_raw, (cX, cY), (cX, cY - cetroid_offset), centroid_color, cetroid_dimension)  # Draw part of the cross on the centroid.
+                cv2.line(image_raw, (cX, cY), (cX, cY + cetroid_offset), centroid_color, cetroid_dimension)  # Draw part of the cross on the centroid.
+
+                cv2.imshow(self.window_video, image_raw)  # Show original image.
 
                 cX, cY = moments_calc(mask)                                                                             # Call moments_calc() function to get centroid.
 
@@ -148,6 +175,8 @@ class adc_func_4_5(object):
             elif (key == ord('r')) or (key == ord('R')) or (key == ord('g')) or (key == ord('G')) or (key == ord('b')) or (key == ord('B')):  # Check if user pressed the 'r' key.
                 print('Only available when you paint with mouse!. You must ' + Fore.YELLOW + Style.BRIGHT + 'run "color_segmenter.py" ' + Style.RESET_ALL + 'script to change pencil color in camera detection mode!')  # Pencil color changed message.
             elif (key == ord('m')) or (key == ord('M')):                                                                # Check if user pressed the 'm' key or closed the window.
+                if cv2.getWindowProperty(self.window_video, cv2.WND_PROP_VISIBLE) < 1:                                  # Check if window exists.
+                    cv2.destroyWindow(self.window_video)                                                                # Close a specific window.
                 self.mouseON = True                                                                                     # Set "mouseON" variable as True.
                 break                                                                                                   # Break while cycle.
             elif key == ord('+'):                                                                                       # Check if user pressed the '+' key.
@@ -619,7 +648,7 @@ def main():
                 z = np.array(all_coordinates[i-1][0])
                 w = abs(x - z)
 
-                if str(w[0]) > str(1.5) and str(w[1]) > str(1.5):
+                if w[0] > 50 and w[1] > 50:
                     pass
                 else:
                     cv2.line(image, all_coordinates[i][0], all_coordinates[i-1][0], all_coordinates[i][1], all_coordinates[i][2])           # Draw in image.
